@@ -48,12 +48,11 @@ public class BaseElasticService {
      * @param idxName
      * @param shards
      * @param replicas
-     * @param idxDesc
      */
     @SneakyThrows
-    public void createIndex(String idxName, int shards, int replicas, String idxDesc) {
+    public void createIndex(String idxName, int shards, int replicas) {
         if (this.indexExist(idxName)) {
-            log.error(" idxName={} already exits,idxSql={}", idxName, idxDesc);
+            log.error("idxName={} already exits", idxName);
             return;
         }
         CreateIndexRequest request = new CreateIndexRequest(idxName);
@@ -75,8 +74,8 @@ public class BaseElasticService {
      */
     @SneakyThrows
     public GetIndexResponse getIndex(String idxName) {
-        GetIndexRequest getIndexRequest = new GetIndexRequest(idxName);
-        return restHighLevelClient.indices().get(getIndexRequest, RequestOptions.DEFAULT);
+        GetIndexRequest request = new GetIndexRequest(idxName);
+        return restHighLevelClient.indices().get(request, RequestOptions.DEFAULT);
     }
 
     /**
@@ -87,8 +86,8 @@ public class BaseElasticService {
      */
     @SneakyThrows
     private boolean indexExist(String idxName) {
-        GetIndexRequest getIndexRequest = new GetIndexRequest(idxName);
-        return restHighLevelClient.indices().exists(getIndexRequest, RequestOptions.DEFAULT);
+        GetIndexRequest request = new GetIndexRequest(idxName);
+        return restHighLevelClient.indices().exists(request, RequestOptions.DEFAULT);
     }
 
     /**
@@ -99,10 +98,11 @@ public class BaseElasticService {
     @SneakyThrows
     public void deleteIndex(String idxName) {
         if (!this.indexExist(idxName)) {
-            log.error(" idxName={} not exits", idxName);
+            log.error("idxName={} not exits", idxName);
             return;
         }
-        AcknowledgedResponse response = restHighLevelClient.indices().delete(new DeleteIndexRequest(idxName), RequestOptions.DEFAULT);
+        DeleteIndexRequest request = new DeleteIndexRequest(idxName);
+        AcknowledgedResponse response = restHighLevelClient.indices().delete(request, RequestOptions.DEFAULT);
         if (!response.isAcknowledged()) {
             throw new RuntimeException("deleteIndex acknowledged fail");
         }

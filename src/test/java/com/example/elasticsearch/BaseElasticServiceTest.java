@@ -32,14 +32,14 @@ public class BaseElasticServiceTest {
     final String INDEX_NAME = "index";
 
     @Test
-    public void indexAPITest() {
-        baseElasticService.createIndex(INDEX_NAME, 3, 2, INDEX_NAME);
+    public void indexApiTest() {
+        baseElasticService.createIndex(INDEX_NAME, 3, 2);
         baseElasticService.getIndex(INDEX_NAME);
 //        baseElasticService.deleteIndex(INDEX_NAME);
     }
 
     @Test
-    public void addAPITest() {
+    public void addApiTest() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", "alex");
         map.put("age", 30);
@@ -61,9 +61,8 @@ public class BaseElasticServiceTest {
     }
 
     @Test
-    public void searchAPITest() {
+    public void searchApiTest() {
         SearchSourceBuilder builder = new SearchSourceBuilder();
-//        builder.query(QueryBuilders.matchAllQuery());
         builder.query(QueryBuilders.termQuery("name", "alex"));
         builder.from(0);
         builder.size(2);
@@ -73,7 +72,7 @@ public class BaseElasticServiceTest {
     }
 
     @Test
-    public void delete() {
+    public void deleteApiTest() {
         List<String> idList = Arrays.asList("1");
         baseElasticService.deleteBatch(INDEX_NAME, idList);
     }
